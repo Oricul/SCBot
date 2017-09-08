@@ -40,7 +40,9 @@ class core:
             Search for Carrack: sc.market carrack
             Search for Carrack CCU from Aquila: sc.market carrack aquila
             Search for Carrack, no CCUs: sc.market carrack no
-            Search for Carrack, only CCUs: sc.market carrack yes'''
+            Search for Carrack, only CCUs: sc.market carrack yes
+
+        Note: This command is slow until I implement a SQL database. Sorry!'''
         print("[{}] <{},{}> {} ({}), '{}'".format(ctx.message.timestamp,ctx.message.server.id,ctx.message.channel.id,
                                                   ctx.message.author.name,ctx.message.author.id,ctx.message.content))
         if int(maxPage) >= 5:
