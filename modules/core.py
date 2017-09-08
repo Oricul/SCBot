@@ -35,10 +35,10 @@ class core:
     async def market(self, ctx, shipName, ccuFrom=None, maxPage=1):
         '''Displays MrFats results for a defined ship.
         Examples:
-            Search for Carrack: ~market carrack
-            Search for Carrack CCU from Aquila: ~market carrack aquila
-            Search for Carrack, no CCUs: ~market carrack no
-            Search for Carrack, only CCUs: ~market carrack yes'''
+            Search for Carrack: sc.market carrack
+            Search for Carrack CCU from Aquila: sc.market carrack aquila
+            Search for Carrack, no CCUs: sc.market carrack no
+            Search for Carrack, only CCUs: sc.market carrack yes'''
         print("[{}] <{},{}> {} ({}), '{}'".format(ctx.message.timestamp,ctx.message.server.id,ctx.message.channel.id,
                                                   ctx.message.author.name,ctx.message.author.id,ctx.message.content))
         if int(maxPage) >= 5:

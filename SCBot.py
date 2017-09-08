@@ -14,7 +14,7 @@ except FileNotFoundError:
 startup_extensions = ['core']
 description = "SCBot for Discord (API v{0}) written in Python3 (v{1}).".format(discord.__version__,python_version())
 
-bot = commands.Bot(command_prefix='~', description=description, self_bot=True)
+bot = commands.Bot(command_prefix='sc.', description=description, self_bot=True)
 
 @bot.event
 async def on_command_error(error, ctx):
