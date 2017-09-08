@@ -3,6 +3,7 @@ import re
 from urllib.request import urlopen
 import discord
 import json
+import asyncio
 from bs4 import BeautifulSoup
 from discord.ext import commands
 from pyshorteners import Shortener as short
@@ -17,7 +18,7 @@ except FileNotFoundError:
     exit("{}.json is not in the current bot directory.".format(jsonfile))
 urlshort = short('Google', api_key=gToken)
 
-async def shortURL(link):
+def shortURL(link):
     try:
         return urlshort.short(link)
     except Exception as e:
@@ -87,14 +88,16 @@ class core:
                     if selectPrice:
                         if selectLink:
                             postLink = str(re.split('[<>"]',str(selectLink[1]))[4])
-                            postLink = await shortURL(postLink)
+                            #fixLink = await shortURL(postLink)
+                            postLink = shortURL(postLink)
                             if 'ERROR' in postLink:
                                 postLink = "http://mrfats.mobiglas.com/search?f={}&h=true&s=price&q={}".format(searchType,shipName)
                         if selectIMG:
                             fixIMG = re.split('[<>"]',str(selectIMG))
                             if 'unavailable' not in fixIMG[4].lower():
                                 shipIMG = fixIMG[4]
-                                shipIMG = await shortURL(shipIMG)
+                                #fixIMG = await shortURL(shipIMG)
+                                shipIMG = shortURL(shipIMG)
                                 if 'ERROR' in shipIMG:
                                     shipIMG = "https://robertsspaceindustries.com/media/ov5oe73cnqyrhr/store_small/Unavailable.jpg"
                         if selectTag:
