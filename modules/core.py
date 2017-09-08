@@ -123,24 +123,24 @@ class core:
                         if not '$0.00' in fixPrice[2]:
                             compiledList.append([fixShip, fixName[2], fixPrice[2], postLink])
                 i += 1
-            if 'shipandccu' in searchType:
-                eDesc = "Ships and CCUs"
-            elif 'ship' in searchType:
-                eDesc = "Ships"
-            else:
-                eDesc = "CCUs"
-            eTitle = "{}".format(shipName.title())
-            eURL = "http://mrfats.mobiglas.com/search?f={}&h=true&s=price&q={}".format(searchType,shipName)
-            eaName = "{}".format(ctx.message.author.name)
-            eaIcon = "{}".format(ctx.message.author.avatar_url)
-            try:
-                if shipIMG:
-                    eIMG = "{}".format(shipIMG)
-                else:
-                    eIMG = "https://robertsspaceindustries.com/media/ov5oe73cnqyrhr/store_small/Unavailable.jpg"
-            except:
-                pass
             if len(compiledList) > 0:
+                if 'shipandccu' in searchType:
+                    eDesc = "Ships and CCUs"
+                elif 'ship' in searchType:
+                    eDesc = "Ships"
+                else:
+                    eDesc = "CCUs"
+                eTitle = "{}".format(shipName.title())
+                eURL = "http://mrfats.mobiglas.com/search?f={}&h=true&s=price&q={}".format(searchType, shipName)
+                eaName = "{}".format(ctx.message.author.name)
+                eaIcon = "{}".format(ctx.message.author.avatar_url)
+                try:
+                    if shipIMG:
+                        eIMG = "{}".format(shipIMG)
+                    else:
+                        eIMG = "https://robertsspaceindustries.com/media/ov5oe73cnqyrhr/store_small/Unavailable.jpg"
+                except:
+                    pass
                 colOne = ""
                 colTwo = ""
                 limiter = 0
