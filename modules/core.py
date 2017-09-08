@@ -6,7 +6,7 @@ import json
 from bs4 import BeautifulSoup
 from discord.ext import commands
 from pyshorteners import Shortener as short
-from modules.printoverride import print as print
+from .printoverride import print as print
 
 jsonfile = "SCBot"
 try:
