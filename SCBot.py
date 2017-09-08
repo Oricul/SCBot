@@ -2,6 +2,7 @@
 import discord, json, sys
 from discord.ext import commands
 from platform import python_version
+from modules.printoverride import print as print
 
 jsonfile = "SCBot"
 try:
