@@ -60,12 +60,11 @@ class core:
                     ccuFrom = None
                 else:
                     searchType = "shipandccu"
-                data = BeautifulSoup(urlopen(
-                    "http://mrfats.mobiglas.com/search?f={}&h=true&s=price&page={}&q={}".format(searchType, i,
-                                                                                                shipName)),
-                    "html.parser")
+                data = BeautifulSoup(urlopen("http://mrfats.mobiglas.com/search?f={}&h=true&s=price&page={}&q={}".format(searchType, i, shipName)), "html.parser")
                 page = data.select("tr")
                 data = data.select("li")
+                if not (len(page) > 0):
+                    break
                 for p in page:
                     pageNum = p.select_one("td.cur")
                     if pageNum:
@@ -177,9 +176,15 @@ class core:
                     print("Exception: {}\nProcess stopped.".format(e))
                     return
             else:
+                if 'shipandccu' in searchType:
+                    eDesc = "Ships and CCUs"
+                elif 'ship' in searchType:
+                    eDesc = "Ships"
+                else:
+                    eDesc = "CCUs"
                 embed = discord.Embed(title="No results or invalid search.", colour=discord.Colour(0xFF0000),
                                       url="http://mrfats.mobiglas.com/search?f={}&h=true&s=price&q={}".format(searchType,shipName),
-                                      description="{}\n".format(searchDesc))
+                                      description="{}\n".format(eDesc))
                 embed.set_author(name="{}".format(ctx.message.author.name),
                                  icon_url="{}".format(ctx.message.author.avatar_url))
                 await self.bot.say(embed=embed)
