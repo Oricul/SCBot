@@ -16,7 +16,7 @@ try:
         gToken = sec['bot']['Google']
 except FileNotFoundError:
     exit("{}.json is not in the current bot directory.".format(jsonfile))
-urlshort = short('Google', api_key=gToken)
+urlshort = short('Google', api_key=gToken, timeout=9000)
 
 def shortURL(link):
     try:
