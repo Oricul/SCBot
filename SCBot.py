@@ -61,4 +61,4 @@ async def on_ready():
 async def on_message(message):
     await bot.process_commands(message)
 
-bot.run(token,bot=False)
+bot.run(token)
