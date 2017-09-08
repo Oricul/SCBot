@@ -22,11 +22,12 @@ async def shortURL(link):
         return urlshort.short(link)
     except Exception as e:
         print("Google API failure.\nError: {0}\nTrying again...".format(e))
-        try:
-            return urlshort.short(link)
-        except Exception as ee:
-            print("Google API failure, again.\nError: {0}\nReturning as an error.".format(ee))
-            return "ERROR"
+        pass
+    try:
+        return urlshort.short(link)
+    except Exception as ee:
+        print("Google API failure, again.\nError: {0}\nReturning as an error.".format(ee))
+        return "ERROR"
 
 class core:
     def __init__(self, bot):
