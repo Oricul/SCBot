@@ -66,6 +66,11 @@ class StarCitizen:
             compiledList = []
             # While loop to gather all data we need from pages.
             while i <= int(maxPage):
+                # Submit a processing notification - since this command takes a while.
+                notifembed = discord.Embed(title="Processing...", colour=discord.Colour(0xFFFF00),
+                                      description="This may take a moment...")
+                notifembed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+                notifMSG = await self.bot.say(embed=notifembed)
                 # Set our search type, then reset the ccuFrom variable for parsing later.
                 if ccuFrom == "no":
                     searchType = "ship"
@@ -254,6 +259,98 @@ class StarCitizen:
                 embed.set_author(name="{}".format(ctx.message.author.name),
                                  icon_url="{}".format(ctx.message.author.avatar_url))
                 await self.bot.say(embed=embed)
+        await self.bot.delete_message(notifMSG)
+
+    @commands.command(pass_context=True,hidden=True)
+    async def ship(self,ctx,*,ship):
+        print("[{}] <{},{}> {} ({}), '{}'".format(ctx.message.timestamp, ctx.message.server.id, ctx.message.channel.id,
+                                                  ctx.message.author.name, ctx.message.author.id, ctx.message.content))
+        # Submit a processing notification - since this command takes a while.
+        notifembed = discord.Embed(title="Processing...", colour=discord.Colour(0xFFFF00),
+                                   description="This may take a moment...")
+        notifembed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+        notifMSG = await self.bot.say(embed=notifembed)
+        fixShip = ship.title()
+        try:
+            fixShip = re.sub(' ','_',fixShip)
+            data = BeautifulSoup(urlopen("https://starcitizen.tools/{}".format(fixShip)), "html.parser")
+        except Exception as e:
+            capt = e
+            print("Outter Exception: {}".format(capt))
+            if '404' in str(capt):
+                parseShip = re.split(' ',ship)
+                secErr = ""
+                for i in parseShip:
+                    print(secErr)
+                    secErr = ""
+                    try:
+                        data = BeautifulSoup(urlopen("https://starcitizen.tools/{}".format(i)), "html.parser")
+                        fixShip = i
+                        break
+                    except Exception as err:
+                        secErr = err
+                        print("Inner Exception: {}".format(secErr))
+                        pass
+                if (secErr):
+                    await self.bot.delete_message(notifMSG)
+                    await self.bot.say("Your search is invalid, or returned no results.")
+                    return
+                else:
+                    pass
+            else:
+                await self.bot.delete_message(notifMSG)
+                await self.bot.say("Some fatal error occurred: {}".format(capt))
+                return
+        data = data.select("table.infobox-table")
+        for d in data:
+            selectName = d.select("th.infobox-table-name.fn")
+            selectName = re.split('[<>]', str(selectName))
+            if 'series' in selectName[2].lower():
+                print("SERIES SHIP")
+            else:
+                print("NOT SERIES")
+            selectManufacturer = d.select_one("td.brand")
+            selectImage = d.select_one("img")
+            selectFocus = d.select_one("td.category")
+            selectStatus = d.select("td")
+        selectManufacturer = re.split('[<>]', str(selectManufacturer))
+        selectImage = re.split('[<>"]',str(selectImage))
+        selectFocus = re.split('[<>]',str(selectFocus))
+        selectFields = re.split('[<>]', str(selectStatus))
+        selectStatus = re.split('[<>]',str(selectStatus))
+        selectHeight = selectFields[88]
+        selectWidth = selectFields[96]
+        selectLength = selectFields[80]
+        selectMass = selectFields[72]
+        selectCargo = selectFields[56]
+        selectCrew = selectFields[48]
+        selectPrice = selectFields[64]
+        selectName = selectName[2]
+        tryColor = re.split('[#|;]',str(selectStatus[39]))
+        if (len(tryColor[2]) <= 6):
+            eColor = tryColor[2]
+        else:
+            eColor = 'ff0000'
+        embed = discord.Embed(title="{}".format(selectName),colour=discord.Colour('{}'.format(int(eColor,16))),
+                              url="https://starcitizen.tools/{}".format(fixShip),
+                              description="{} {}".format(selectManufacturer[4],selectManufacturer[10]))
+        embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+        embed.set_image(url="https://starcitizen.tools{}".format(selectImage[10]))
+        embed.add_field(name="Focus", value="{}".format(selectFocus[2]), inline=True)
+        embed.add_field(name="Status", value="{}".format(selectStatus[40]), inline=True)
+        embed.add_field(name="Height", value=selectHeight, inline=True)
+        embed.add_field(name="Width", value=selectWidth, inline=True)
+        embed.add_field(name="Length", value=selectLength, inline=True)
+        embed.add_field(name="Mass", value=selectMass, inline=True)
+        embed.add_field(name="Cargo", value=selectCargo, inline=True)
+        embed.add_field(name="Crew", value=selectCrew, inline=True)
+        embed.add_field(name="Cost", value=selectPrice, inline=True)
+        try:
+            await self.bot.say(embed=embed)
+        except Exception as e:
+            await self.bot.say(e)
+        await self.bot.delete_message(notifMSG)
+
 
 # Add cog to bot once loaded.
 def setup(bot):
