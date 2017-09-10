@@ -81,6 +81,11 @@ class StarCitizen:
         # If there's no data in 'page', then we got some kind of resolution error. Break the loop.
         # Error for this is handled later as a general fail.
         if not (len(page) > 0):
+            await self.bot.delete_message(notifMSG)
+            embed = discord.Embed(title="Search Error", colour=discord.Colour(0xFF0000),
+                                  description="Your search is invalid, or returned no results.")
+            embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+            await self.bot.say(embed=embed)
             return
         # MAGIC HAPPENS HERE.
         for d in data:
