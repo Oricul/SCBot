@@ -248,12 +248,12 @@ class StarCitizen:
             data = BeautifulSoup(urlopen("https://starcitizen.tools/{}".format(fixShip)), "html.parser")
         except Exception as e:
             capt = e
-            print("Outter Exception: {}".format(capt))
+            #print("Outter Exception: {}".format(capt))
             if '404' in str(capt):
                 parseShip = re.split(' ',ship)
                 secErr = ""
                 for i in parseShip:
-                    print(secErr)
+                    #print(secErr)
                     secErr = ""
                     try:
                         data = BeautifulSoup(urlopen("https://starcitizen.tools/{}".format(i)), "html.parser")
@@ -261,7 +261,7 @@ class StarCitizen:
                         break
                     except Exception as err:
                         secErr = err
-                        print("Inner Exception: {}".format(secErr))
+                        #print("Inner Exception: {}".format(secErr))
                         pass
                 if (secErr):
                     await self.bot.delete_message(notifMSG)
@@ -308,7 +308,7 @@ class StarCitizen:
                 if 'manufacturer' in c.lower():
                     selectManufacturer = selectFields[selectCounter + 5]
                     selectShort = selectFields[selectCounter + 11]
-                    print("Manufacturer: {} {}".format(selectFields[selectCounter+5],selectFields[selectCounter+11]))
+                    #print("Manufacturer: {} {}".format(selectFields[selectCounter+5],selectFields[selectCounter+11]))
                     selectManufacturer = '{} {}'.format(selectManufacturer, selectShort)
                     continue
                 if 'focus' in c.lower():
@@ -316,54 +316,68 @@ class StarCitizen:
                         selectFocus = "{}\n".format(selectFields[selectCounter + 3])
                     else:
                         selectFocus = "{}{}\n".format(selectFocus,selectFields[selectCounter +3 ])
-                    print("Focus: {}".format(selectFields[selectCounter+3]))
+                    #print("Focus: {}".format(selectFields[selectCounter+3]))
                     continue
                 if 'production state' in c.lower():
                     if 'active' in str(selectFields[selectCounter + 3]).lower():
-                        selectStatus = "{}{}".format(selectFields[selectCounter + 3],selectFields[selectCounter + 5])
+                        selectStatus = "{}{}".format(selectFields[selectCounter + 3],re.sub(',','',selectFields[selectCounter + 5]))
                     else:
                         selectStatus = selectFields[selectCounter + 3]
-                    print("Prod. State: {}\nProd. Color: {}".format(selectFields[selectCounter + 3],selectFields[selectCounter + 2]))
+                    #print("Prod. State: {}\nProd. Color: {}".format(selectFields[selectCounter + 3],selectFields[selectCounter + 2]))
                     selectColor = re.split('[#|;]', selectFields[selectCounter + 2])
                     continue
                 if 'maximum crew' in c.lower():
-                    print("Max. Crew: {}".format(selectFields[selectCounter + 3]))
-                    selectCrew = selectFields[selectCounter + 3]
+                    if (len(selectFields[selectCounter + 3]) == 0):
+                        selectCrew = selectFields[selectCounter + 9]
+                        crewCount = selectCounter + 12
+                        while 'li' in selectFields[crewCount].lower():
+                            selectCrew = '{}\n{}'.format(selectCrew,selectFields[crewCount+1])
+                            crewCount += 4
+                    else:
+                        selectCrew = selectFields[selectCounter + 3]
+                    #print("Max. Crew: {}".format(selectCrew))
                     continue
                 if 'pledge cost' in c.lower():
-                    print("Cost: {}".format(selectFields[selectCounter + 3]))
+                    #print("Cost: {}".format(selectFields[selectCounter + 3]))
                     selectPrice = selectFields[selectCounter + 3]
                     if '$' not in selectPrice:
                         selectPrice = "$ {}".format(selectPrice)
                     continue
                 if 'null-cargo mass' in c.lower():
-                    print("Mass: {}".format(selectFields[selectCounter + 3]))
+                    #print("Mass: {}".format(selectFields[selectCounter + 3]))
                     selectMass = selectFields[selectCounter + 3]
                     continue
                 if 'max. scm speed' in c.lower():
-                    print("Max. SCM Speed: {}".format(selectFields[selectCounter + 3]))
+                    #print("Max. SCM Speed: {}".format(selectFields[selectCounter + 3]))
                     selectSCMSpeed = selectFields[selectCounter + 3]
                     continue
                 if 'length' in c.lower():
-                    print("Length: {}".format(selectFields[selectCounter + 3]))
+                    #print("Length: {}".format(selectFields[selectCounter + 3]))
                     selectLength = selectFields[selectCounter + 3]
                     continue
                 if 'height' in c.lower():
                     if '/td' not in selectFields[selectCounter + 3]:
-                        print("Height: {}".format(selectFields[selectCounter + 3]))
+                        #print("Height: {}".format(selectFields[selectCounter + 3]))
                         selectHeight = selectFields[selectCounter + 3]
                         continue
                 if 'beam' in c.lower():
-                    print("Width: {}".format(selectFields[selectCounter + 3]))
+                    #print("Width: {}".format(selectFields[selectCounter + 3]))
                     selectWidth = selectFields[selectCounter + 3]
                     continue
                 if 'max. afterburner speed' in c.lower():
-                    print("Max. AB Speed: {}".format(selectFields[selectCounter + 3]))
+                    #print("Max. AB Speed: {}".format(selectFields[selectCounter + 3]))
                     selectABSpeed = selectFields[selectCounter + 3]
                     continue
                 if 'cargo capacity' in c.lower():
-                    print("Cargo: {}".format(selectFields[selectCounter + 3]))
-                    selectCargo = selectFields[selectCounter + 3]
+                    if (len(selectFields[selectCounter + 3]) == 0):
+                        selectCargo = selectFields[selectCounter + 9]
+                        cargoCount = selectCounter + 12
+                        while 'li' in selectFields[cargoCount].lower():
+                            selectCargo = '{}\n{}'.format(selectCargo,selectFields[cargoCount+1])
+                            cargoCount += 4
+                    else:
+                        selectCargo = selectFields[selectCounter + 3]
+                    #print("Cargo: {}".format(selectCargo))
                     continue
             #print(compileit)
             selectImage = d.select_one("img")
@@ -372,39 +386,53 @@ class StarCitizen:
             eColor = selectColor[2]
         else:
             eColor = 'ff0000'
+        #print("Embed, Name: {}, Color: {}, URL: https://starcitizen.tools/{}, Desc: {}".format(selectName,eColor,fixShip,selectManufacturer))
         embed = discord.Embed(title="{}".format(selectName),colour=discord.Colour('{}'.format(int(eColor,16))),
                               url="https://starcitizen.tools/{}".format(fixShip),
                               description="{}".format(selectManufacturer))
         embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+        #print("Embed, Image: https://starcitizen.tools{}".format(selectImage[10]))
         embed.set_image(url="https://starcitizen.tools{}".format(selectImage[10]))
         if 'selectFocus' in locals():
+            #print("Embed, Focus: {}".format(selectFocus))
             embed.add_field(name="Focus", value=selectFocus, inline=True)
         if 'selectStatus' in locals():
+            #print("Embed, Status: {}".format(selectStatus))
             embed.add_field(name="Status", value=selectStatus, inline=True)
         if 'selectHeight' in locals():
+            #print("Embed, Height: {}".format(selectHeight))
             embed.add_field(name="Height", value=selectHeight, inline=True)
         if 'selectWidth' in locals():
+            #print("Embed, Width: {}".format(selectWidth))
             embed.add_field(name="Width", value=selectWidth, inline=True)
         if 'selectLength' in locals():
+            #print("Embed, Length: {}".format(selectLength))
             embed.add_field(name="Length", value=selectLength, inline=True)
         if 'selectMass' in locals():
+            #print("Embed, Mass: {}".format(selectMass))
             embed.add_field(name="Mass", value=selectMass, inline=True)
         if 'selectCargo' in locals():
+            #print("Embed, Cargo: {}".format(selectCargo))
             embed.add_field(name="Cargo", value=selectCargo, inline=True)
         if 'selectCrew' in locals():
+            #print("Embed, Crew: {}".format(selectCrew))
             embed.add_field(name="Crew", value=selectCrew, inline=True)
         if 'selectSCMSpeed' in locals():
+            #print("Embed, SCM Speed: {}".format(selectSCMSpeed))
             embed.add_field(name="Max. SCM Speed", value=selectSCMSpeed, inline=True)
         if 'selectABSpeed' in locals():
+            #print("Embed, AB Speed: {}".format(selectABSpeed))
             embed.add_field(name="Max. Afterburner Speed", value=selectABSpeed, inline=True)
         if 'selectPrice' in locals():
+            #print("Embed, Price: {}".format(selectPrice))
             embed.add_field(name="Cost", value=selectPrice, inline=True)
         if 'selectVariants' in locals():
+            #print("Embed, Variants: {}".format(selectVariants))
             embed.add_field(name="Variants", value=selectVariants, inline=True)
         try:
             await self.bot.say(embed=embed)
         except Exception as e:
-            await self.bot.say(e)
+            await self.bot.say("Failed to submit to Discord: {}".format(e))
         await self.bot.delete_message(notifMSG)
 
 
