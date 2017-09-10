@@ -83,7 +83,7 @@ class StarCitizen:
         if not (len(page) > 0):
             await self.bot.delete_message(notifMSG)
             embed = discord.Embed(title="Search Error", colour=discord.Colour(0xFF0000),
-                                  description="Your search is invalid, or returned no results.")
+                                  description="Your search for '{}' is invalid, or returned no results.".format(shipName))
             embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
             await self.bot.say(embed=embed)
             return
@@ -271,7 +271,7 @@ class StarCitizen:
                 if (secErr):
                     await self.bot.delete_message(notifMSG)
                     embed = discord.Embed(title="Search Error", colour=discord.Colour(0xFF0000),
-                                               description="Your search is invalid, or returned no results.")
+                                               description="Your search for '{}' is invalid, or returned no results.".format(ship))
                     embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
                     await self.bot.say(embed=embed)
                     return
