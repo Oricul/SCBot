@@ -241,6 +241,7 @@ class StarCitizen:
                                    description="This may take a moment...")
         notifembed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         notifMSG = await self.bot.say(embed=notifembed)
+        ship = re.sub('-',' ',ship)
         fixShip = ship.title()
         try:
             fixShip = re.sub(' ','_',fixShip)
@@ -264,13 +265,19 @@ class StarCitizen:
                         pass
                 if (secErr):
                     await self.bot.delete_message(notifMSG)
-                    await self.bot.say("Your search is invalid, or returned no results.")
+                    embed = discord.Embed(title="Search Error", colour=discord.Colour(0xFF0000),
+                                               description="Your search is invalid, or returned no results.")
+                    embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+                    await self.bot.say(embed=embed)
                     return
                 else:
                     pass
             else:
                 await self.bot.delete_message(notifMSG)
-                await self.bot.say("Some fatal error occurred: {}".format(capt))
+                embed = discord.Embed(title="ERROR", colour=discord.Colour(0xFF0000),
+                                           description="A fatal error occurred: {}".format(capt))
+                embed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
+                await self.bot.say(embed=embed)
                 return
         variants = data.select("li.toclevel-1")
         data = data.select("table.infobox-table")
