@@ -246,8 +246,8 @@ class StarCitizen:
                                    description="This may take a moment...")
         notifembed.set_author(name=ctx.message.author.name, icon_url=ctx.message.author.avatar_url)
         notifMSG = await self.bot.say(embed=notifembed)
-        ship = re.sub('-',' ',ship)
         fixShip = ship.title()
+        fixShip = re.sub('-',' ',fixShip)
         try:
             fixShip = re.sub(' ','_',fixShip)
             data = BeautifulSoup(urlopen("https://starcitizen.tools/{}".format(fixShip)), "html.parser")
