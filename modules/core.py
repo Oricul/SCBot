@@ -74,13 +74,10 @@ class StarCitizen:
         else:
             searchType = "shipandccu"
         # Use BS4 to open the page and make it usable.
-        print("Prior to data")
         data = BeautifulSoup(urlopen("http://mrfats.mobiglas.com/search?f={}&h=true&s=price&q={}".format(searchType, shipName)), "html.parser")
-        print("After data")
         # We only want two data sets. 'page' gives us the page number. 'data' is, well data.
         page = data.select("tr")
         data = data.select("li")
-        print("After selections")
         # If there's no data in 'page', then we got some kind of resolution error. Break the loop.
         # Error for this is handled later as a general fail.
         if not (len(page) > 0):
